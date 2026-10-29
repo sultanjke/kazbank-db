@@ -5,7 +5,7 @@ from decimal import Decimal, InvalidOperation
 from flask import Blueprint, jsonify, request
 from psycopg import errors as pg_errors
 
-from app.db import get_conn
+from app.db import pool
 from app.errors import ApiError
 
 bp = Blueprint("transactions", __name__)
@@ -40,7 +40,7 @@ def create_transaction():
         raise ApiError(400, "tx_type must be DEBIT or CREDIT")
     signed = -amount if tx_type == "DEBIT" else amount
 
-    with get_conn() as conn:
+    with pool.connection() as conn:
         try:
             # lock the row so two requests can't change the same balance at once
             if conn.execute("SELECT 1 FROM accounts WHERE account_id = %s FOR UPDATE",
@@ -77,7 +77,7 @@ def with_retry(fn, max_retries=3):
             time.sleep(0.05 * 2 ** attempt)             # 50 ms, 100 ms, 200 ms ...
 
 def do_transfer(from_acc, to_acc, amount):
-    with get_conn() as conn:
+    with pool.connection() as conn:
         try:
             # Task 4.3: SERIALIZABLE for this transaction only (must be the first statement)
             conn.execute("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")

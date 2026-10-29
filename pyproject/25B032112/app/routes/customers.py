@@ -1,7 +1,7 @@
 """/customers endpoints."""
 from flask import Blueprint, jsonify, request
 
-from app.db import get_conn
+from app.db import pool
 from app.errors import ApiError
 
 bp = Blueprint("customers", __name__)
@@ -21,7 +21,7 @@ def list_customers():
     else:
         sql = "SELECT customer_id, full_name, email, city FROM customers ORDER BY customer_id"
         args = ()
-    with get_conn() as conn:
+    with pool.connection() as conn:
         rows = conn.execute(sql, args).fetchall()
     return jsonify([_row(r) for r in rows])
 
@@ -33,7 +33,7 @@ def create_customer():
         raise ApiError(400, "Request body must be a JSON object")
     # full_name is deliberately NOT checked here: a missing name reaches the
     # database and comes back as NotNullViolation -> 400 (Step 5 test).
-    with get_conn() as conn:
+    with pool.connection() as conn:
         try:
             cur = conn.execute(
                 "INSERT INTO customers (full_name, email, city) "
@@ -53,7 +53,7 @@ def update_customer(cid):
     data = request.get_json(silent=True) or {}
     if not data.get("full_name") or not data.get("city"):
         raise ApiError(400, "full_name and city are required")
-    with get_conn() as conn:
+    with pool.connection() as conn:
         try:
             cur = conn.execute(
                 "UPDATE customers SET full_name = %s, city = %s, email = COALESCE(%s, email) "
@@ -71,7 +71,7 @@ def update_customer(cid):
 
 @bp.delete("/customers/<int:cid>")
 def delete_customer(cid):
-    with get_conn() as conn:
+    with pool.connection() as conn:
         try:
             cur = conn.execute("DELETE FROM customers WHERE customer_id = %s", (cid,))
             if cur.rowcount == 0:
