@@ -62,6 +62,20 @@ def create_transaction():
             raise
     return jsonify({"tx_id": tx_id, "account_id": account_id, "balance": str(new_balance)}), 201
 
+def with_retry(fn, max_retries=3):
+    """Re-run fn() when PostgreSQL aborts it with 40001 or 40P01.
+
+    fn must open its OWN connection/transaction, so every attempt starts fresh.
+    """
+    for attempt in range(max_retries):
+        try:
+            return fn()
+        except (pg_errors.SerializationFailure, pg_errors.DeadlockDetected) as e:
+            if attempt == max_retries - 1:
+                raise                                   # -> 409 via the error handler
+            print(f"{type(e).__name__} on attempt {attempt + 1}, retrying")
+            time.sleep(0.05 * 2 ** attempt)             # 50 ms, 100 ms, 200 ms ...
+
 def do_transfer(from_acc, to_acc, amount):
     with get_conn() as conn:
         try:
@@ -114,5 +128,5 @@ def transfer():
         raise ApiError(400, "from_account and to_account must differ")
     amount = _amount(data.get("amount"))
 
-    body, status = do_transfer(from_acc, to_acc, amount)
+    body, status = with_retry(lambda: do_transfer(from_acc, to_acc, amount))
     return jsonify(body), status
