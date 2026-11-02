@@ -72,7 +72,7 @@ flask --app app run                 # API on http://127.0.0.1:5000
 ## Test evidence
 
 - SQL injection, 409 / 400 / 503 tests, overdraft test, load-test output (paste outputs)
-- [pyproject/25B032112/docs/deadlock.png](Deadlock) and [pyproject/25B032112/docs/no_deadlock.png](No Deadlock (fix))
+- [Deadlock](pyproject/25B032112/docs/deadlock.png) and [NoDeadlock](pyproject/25B032112/docs/no_deadlock.png)
 
 ### Deadlock simulation order
 
