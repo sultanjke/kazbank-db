@@ -108,7 +108,3 @@ The submitted version is tagged **`v1.0`**. The graded project is in `pyproject/
 ## Author
 
 **Sultan Mecheyev** - `25B032112`
-
----
-
-*This repository is coursework submitted for assessment. Please do not copy or reuse it for your own submission.*
