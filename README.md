@@ -107,7 +107,7 @@ The submitted version is tagged **`v1.0`**. The graded project is in `pyproject/
 
 ## Author
 
-**Sultan Mecheyev** - student ID `25B032112`
+**Sultan Mecheyev** - `25B032112`
 
 ---
 
