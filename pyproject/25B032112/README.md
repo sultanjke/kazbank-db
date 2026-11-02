@@ -10,6 +10,7 @@ CSCI2204 Python + PostgreSQL Integration Practice - **Sultan Mecheyev**, ID - **
 
 ## Setup
 
+```
 python -m venv venv
 source venv/bin/activate            # Windows Git Bash: source venv/Scripts/activate
 pip install -r requirements.txt
@@ -17,6 +18,7 @@ cp .env.example .env                # then put your password in .env
 python check_conn.py                # Step 1
 python setup_db.py                  # Step 2
 flask --app app run                 # API on http://127.0.0.1:5000
+```
 
 ## Endpoints
 
