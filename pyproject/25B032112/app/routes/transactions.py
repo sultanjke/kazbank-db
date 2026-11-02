@@ -62,6 +62,25 @@ def create_transaction():
             raise
     return jsonify({"tx_id": tx_id, "account_id": account_id, "balance": str(new_balance)}), 201
 
+@bp.get("/transactions")
+def list_transactions():
+    account_id = request.args.get("account_id", type=int)
+    if account_id is None:
+        raise ApiError(400, "Query parameter account_id (integer) is required")
+    with pool.connection() as conn:
+        if conn.execute("SELECT 1 FROM accounts WHERE account_id = %s",
+                        (account_id,)).fetchone() is None:
+            raise ApiError(404, f"Account {account_id} not found")
+        rows = conn.execute(
+            "SELECT tx_id, amount, tx_type, status, created_at FROM transactions "
+            "WHERE account_id = %s ORDER BY created_at DESC, tx_id DESC",
+            (account_id,),
+        ).fetchall()
+    return jsonify([
+        {"tx_id": r[0], "amount": str(r[1]), "tx_type": r[2], "status": r[3],
+         "created_at": r[4].isoformat()} for r in rows
+    ])
+
 def with_retry(fn, max_retries=3):
     """Re-run fn() when PostgreSQL aborts it with 40001 or 40P01.
 
