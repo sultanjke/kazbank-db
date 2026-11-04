@@ -20,14 +20,14 @@ from the first database connection to an atomic, concurrency-safe money-transfer
 .
 ├── README.md                     ← you are here (repository overview)
 ├── .gitignore                    excludes venv/, .env, __pycache__/
-└── python_project/
-    └── your_id/                  the project (named after the student ID, as the course requires)
+└── pyproject/
+    └── 25B032112/                  the project
         ├── README.md             setup, endpoints, curl examples, test evidence
         ├── requirements.txt      Python dependencies
         ├── .env.example          template for the database connection string
-        ├── check_conn.py         Step 1 – first connection, server version, autocommit check
-        ├── setup_db.py           Step 2 – schema creation and seed data
-        ├── loadtest.py           Step 6 – concurrent load test of the connection pool
+        ├── check_conn.py         Step 1 - first connection, server version, autocommit check
+        ├── setup_db.py           Step 2 - schema creation and seed data
+        ├── loadtest.py           Step 6 - concurrent load test of the connection pool
         ├── app/
         │   ├── __init__.py       Flask app factory + /health endpoint
         │   ├── db.py             shared ConnectionPool (min 2, max 8)
@@ -103,7 +103,7 @@ See the [project README](pyproject/25B032112/README.md) for details and test com
 
 ## Submission
 
-The submitted version is tagged **`v1.0`**. The graded project is in `pyproject/25B032112/`.
+The submitted version is tagged **`v1.0`**. The graded project is in [`pyproject/25B032112/`](pyproject/25B032112/).
 
 ## Author
 
