@@ -1,7 +1,6 @@
 # KazBank Transaction API
 
-Flask + psycopg3 REST API over the KazBank PostgreSQL schema.
-CSCI2204 Python + PostgreSQL Integration Practice - **Sultan Mecheyev**, ID - **25B032112**.
+Flask + psycopg3 REST API over the KazBank PostgreSQL schema. Python + PostgreSQL Integration Practice - **Sultan Mecheyev**, ID - **25B032112**.
 
 ## Requirements
 
